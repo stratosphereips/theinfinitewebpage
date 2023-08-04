@@ -37,7 +37,7 @@ if args.port:
 class Cli():
     def __init__(self):
         self.connection_time = -1
-        self.disconnectionTime = -1
+        self.disconnection_time = -1
         self.amountTransfered = 0
         self.y_pos = -1
 

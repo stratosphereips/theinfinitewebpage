@@ -34,7 +34,7 @@ if args.port:
 
 
 # Global Class. Oh my.
-class cli():
+class Cli():
     def __init__(self):
         self.connectionTime = -1
         self.disconnectionTime = -1
@@ -80,7 +80,7 @@ class StreamHandler(http.Request):
     def process(self):
         global y_pos
         global clients
-        newcli = cli()
+        newcli = Cli()
         newcli.connectionTime = datetime.datetime.now()
         clients[self.client] = newcli
         clients[self.client].y_pos = y_pos

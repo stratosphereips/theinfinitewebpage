@@ -36,7 +36,7 @@ if args.port:
 # Global Class. Oh my.
 class Cli():
     def __init__(self):
-        self.connectionTime = -1
+        self.connection_time = -1
         self.disconnectionTime = -1
         self.amountTransfered = 0
         self.y_pos = -1
@@ -81,7 +81,7 @@ class StreamHandler(http.Request):
         global y_pos
         global clients
         newcli = Cli()
-        newcli.connectionTime = datetime.datetime.now()
+        newcli.connection_time = datetime.datetime.now()
         clients[self.client] = newcli
         clients[self.client].y_pos = y_pos
         logging.info('New Client connected from {}:{}'.format(self.client.host, self.client.port))
@@ -97,7 +97,7 @@ class StreamHandler(http.Request):
         logging.info(f'Client {self.client.host}:{self.client.port}. Path: {str(self.uri)}')
 
         # Print
-        screen.addstr(clients[self.client].y_pos,0, "Client "+str(self.client.host)+':'+str(self.client.port)+'. '+str(clients[self.client].connectionTime)+' '+str(self.method)+' '+str(self.uri)+' UA: '+short_useragent)
+        screen.addstr(clients[self.client].y_pos,0, "Client "+str(self.client.host)+':'+str(self.client.port)+'.  '+str(clients[self.client].connection_time)+' '+str(self.method)+' '+str(self.uri)+' UA: '+short_useragent)
 
         #screen.addstr(13,0,str(self.uri))
         screen.refresh()
@@ -111,7 +111,7 @@ class StreamHandler(http.Request):
                 s += str("What you are looking for is in the next line<br>"*100)
                 newcli.amountTransfered += len(s)
                 # For some reason the connection is not stopped and continues to try to send data
-                screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amountTransfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connectionTime), curses.color_pair(2))
+                screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amountTransfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connection_tim), curses.color_pair(2))
                 screen.refresh()
                 try:
                     self.write(s)
@@ -127,7 +127,7 @@ class StreamHandler(http.Request):
         global clients
         disconnect_time = datetime.datetime.now()
         try:
-            logging.info('Client {}:{}. Finished connection. Total Transfer: {:.3f} MB, Duration: {}'.format(self.client.host, self.client.port, clients[self.client].amountTransfered/1024/1024.0, str(disconnect_time - clients[self.client].connectionTime)))
+            logging.info('Client {}:{}. Finished connection. Total Transfer: {:.3f} MB, Duration: {}'.format(self.client.host, self.client.port, clients[self.client].amountTransfered/1024/1024.0, str(disconnect_time - clients[self.client].connection_time)))
         except AttributeError:
             logging.error('The client variable was not available. No more info.')
             return

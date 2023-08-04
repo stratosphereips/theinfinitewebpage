@@ -1,14 +1,14 @@
 #!/usr/bin/env python
+import datetime
+import curses
+import logging
+import argparse
+
 from twisted.internet import reactor # drives the whole process, accepting TCP connections and moving bytes
 from twisted.internet import defer
 from twisted.web import http
 from twisted.internet import protocol
 from twisted.web.server import NOT_DONE_YET
-
-import datetime
-import curses
-import logging
-import argparse
 
 # config of the log
 logging.basicConfig(filename='theinfinitewebsite.log',level=logging.INFO,format='%(asctime)s %(message)s')

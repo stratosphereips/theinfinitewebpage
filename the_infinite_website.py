@@ -84,7 +84,7 @@ class StreamHandler(http.Request):
         newcli.connection_time = datetime.datetime.now()
         clients[self.client] = newcli
         clients[self.client].y_pos = Y_POS
-        logging.info('New Client connected from {}:{}'.format(self.client.host, self.client.port))
+        logging.info(f'New Client connected from {self.client.host}:{self.client.port}')
         Y_POS += 1
         try:
             useragent = http.Request.getAllHeaders(self)['user-agent']

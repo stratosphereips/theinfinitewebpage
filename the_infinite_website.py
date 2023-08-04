@@ -143,5 +143,5 @@ class StreamFactory(http.HTTPFactory):
 
 # Port is given by command parameter or defaults to 8800
 reactor.listenTCP(port, StreamFactory())
-logging.info('Listening on port {}'.format(port))
+logging.info(f'Listening on port {port}')
 reactor.run()

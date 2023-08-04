@@ -37,7 +37,7 @@ class cli():
 y_pos = 1
 clients = {}
 
-# Initialize the curses       
+# Initialize the curses
 stdscr = curses.initscr()
 curses.start_color()
 curses.use_default_colors()

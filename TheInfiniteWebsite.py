@@ -106,18 +106,18 @@ class StreamHandler(http.Request):
         # For GET and POST it works fine
         if 'GET' in self.method or 'POST' in self.method or 'CONNECT' in self.method or 'PUT' in self.method:
             while not http.Request.finished:
-                    self.setHeader('Connection', 'Keep-Alive')
-                    s = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>This is a TL;DR page.</title></head><body>"
-                    s += str("What you are looking for is in the next line<br>"*100)
-                    newcli.amountTransfered += len(s)
-                    # For some reason the connection is not stopped and continues to try to send data
-                    screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amountTransfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connectionTime), curses.color_pair(2))
-                    screen.refresh()
-                    try:
-                        self.write(s)
-                        yield wait(0)
-                    except:
-                        return
+                self.setHeader('Connection', 'Keep-Alive')
+                s = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>This is a TL;DR page.</title></head><body>"
+                s += str("What you are looking for is in the next line<br>"*100)
+                newcli.amountTransfered += len(s)
+                # For some reason the connection is not stopped and continues to try to send data
+                screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amountTransfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connectionTime), curses.color_pair(2))
+                screen.refresh()
+                try:
+                    self.write(s)
+                    yield wait(0)
+                except:
+                    return
         # For HEAD we should do something different because they don't wait for any data.
         elif 'HEAD' in self.method or 'OPTIONS' in self.method:
             self.setHeader('Connection', 'Keep-Alive')

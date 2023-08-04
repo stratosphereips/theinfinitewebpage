@@ -123,7 +123,7 @@ class StreamHandler(http.Request):
             self.setHeader('Connection', 'Keep-Alive')
 
 
-    def connectionLost(self,reason):
+    def connection_lost(self,reason):
         global clients
         disconnect_time = datetime.datetime.now()
         try:

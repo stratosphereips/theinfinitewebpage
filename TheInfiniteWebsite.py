@@ -43,7 +43,7 @@ class Cli():
 
 
 # Global variables. YES GLOBAL
-y_pos = 1
+Y_POS = 1
 clients = {}
 
 # Initialize the curses
@@ -73,19 +73,19 @@ def wait(seconds, result=None):
     return d
 
 class StreamHandler(http.Request):
-    global y_pos
+    global Y_POS
     global clients
 
     @defer.inlineCallbacks
     def process(self):
-        global y_pos
+        global Y_POS
         global clients
         newcli = Cli()
         newcli.connection_time = datetime.datetime.now()
         clients[self.client] = newcli
-        clients[self.client].y_pos = y_pos
+        clients[self.client].y_pos = Y_POS
         logging.info('New Client connected from {}:{}'.format(self.client.host, self.client.port))
-        y_pos += 1
+        Y_POS += 1
         try:
             useragent = http.Request.getAllHeaders(self)['user-agent']
             short_useragent = useragent[0:50]

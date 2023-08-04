@@ -38,7 +38,7 @@ class Cli():
     def __init__(self):
         self.connection_time = -1
         self.disconnection_time = -1
-        self.amountTransfered = 0
+        self.amount_transfered = 0
         self.y_pos = -1
 
 
@@ -109,9 +109,9 @@ class StreamHandler(http.Request):
                 self.setHeader('Connection', 'Keep-Alive')
                 s = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>This is a TL;DR page.</title></head><body>"
                 s += str("What you are looking for is in the next line<br>"*100)
-                newcli.amountTransfered += len(s)
+                newcli.amount_transfered += len(s)
                 # For some reason the connection is not stopped and continues to try to send data
-                screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amountTransfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connection_tim), curses.color_pair(2))
+                screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amount_transfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connection_tim), curses.color_pair(2))
                 screen.refresh()
                 try:
                     self.write(s)
@@ -127,7 +127,7 @@ class StreamHandler(http.Request):
         global clients
         disconnect_time = datetime.datetime.now()
         try:
-            logging.info('Client {}:{}. Finished connection. Total Transfer: {:.3f} MB, Duration: {}'.format(self.client.host, self.client.port, clients[self.client].amountTransfered/1024/1024.0, str(disconnect_time - clients[self.client].connection_time)))
+            logging.info('Client {}:{}. Finished connection. Total Transfer: {:.3f} MB, Duration: {}'.format(self.client.host, self.client.port, clients[self.client].amount_transfered/1024/1024.0, str(disconnect_time - clients[self.client].connection_time)))
         except AttributeError:
             logging.error('The client variable was not available. No more info.')
             return

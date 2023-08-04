@@ -4,19 +4,28 @@ import curses
 import logging
 import argparse
 
-from twisted.internet import reactor # drives the whole process, accepting TCP connections and moving bytes
+# twisted.internet  drives the whole process, accepting TCP connections and moving bytes
+from twisted.internet import reactor
 from twisted.internet import defer
 from twisted.web import http
 from twisted.internet import protocol
 from twisted.web.server import NOT_DONE_YET
 
-# config of the log
-logging.basicConfig(filename='theinfinitewebsite.log',level=logging.INFO,format='%(asctime)s %(message)s')
+# Initialise logging
+logging.basicConfig(filename='theinfinitewebsite.log',
+                    level=logging.INFO,
+                    format='%(asctime)s %(message)s')
 
 
-# Arg parser
+# Argument parser
 parser = argparse.ArgumentParser()
-parser.add_argument('-p', '--port', help='Port where the webserver should listen.', action='store', required=False, type=int, default=8800)
+parser.add_argument('-p',
+                    '--port',
+                    help='Port where the webserver should listen.',
+                    action='store',
+                    required=False,
+                    type=int,
+                    default=8800)
 args = parser.parse_args()
 
 if args.port:
@@ -83,9 +92,10 @@ class StreamHandler(http.Request):
         except:
             useragent = "Empty"
             short_useragent = "Empty"
-        logging.info('Client {}:{}. User-Agent: {}'.format(self.client.host, self.client.port, useragent))
-        logging.info('Client {}:{}. Method: {}'.format(self.client.host, self.client.port, str(self.method)))
-        logging.info('Client {}:{}. Path: {}'.format(self.client.host, self.client.port, str(self.uri)))
+        logging.info(f'Client {self.client.host}:{self,client.port}. User-Agent: {useragent}')
+        logging.info(f'Client {self.client.host}:{self.client.port}. Method: {str(self.method)}')
+        logging.info(f'Client {self.client.host}:{self.client.port}. Path: {str(self.uri)}')
+
         # Print
         screen.addstr(clients[self.client].y_pos,0, "Client "+str(self.client.host)+':'+str(self.client.port)+'. '+str(clients[self.client].connectionTime)+' '+str(self.method)+' '+str(self.uri)+' UA: '+short_useragent)
 

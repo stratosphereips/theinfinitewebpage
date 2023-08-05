@@ -104,7 +104,7 @@ class StreamHandler(http.Request):
 
 
         # For GET and POST it works fine
-        if 'GET' in self.method or 'POST' in self.method or 'CONNECT' in self.method or 'PUT' in self.method:
+        if any(method in self.method.decode() for method in ['GET', 'POST', 'CONNECT', 'PUT']):
             while not http.Request.finished:
                 self.setHeader('Connection', 'Keep-Alive')
                 s = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>This is a TL;DR page.</title></head><body>"

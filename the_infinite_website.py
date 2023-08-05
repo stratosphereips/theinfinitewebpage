@@ -111,7 +111,7 @@ class StreamHandler(http.Request):
                 s += str("What you are looking for is in the next line<br>"*100)
                 newcli.amount_transfered += len(s)
                 # For some reason the connection is not stopped and continues to try to send data
-                screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amount_transfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connection_tim), curses.color_pair(2))
+                screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amount_transfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connection_time), curses.color_pair(2))
                 screen.refresh()
                 try:
                     self.write(s)

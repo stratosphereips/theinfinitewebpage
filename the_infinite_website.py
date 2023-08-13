@@ -96,8 +96,17 @@ class StreamHandler(http.Request):
         logging.info(f'Client {self.client.host}:{self.client.port}. Method: {str(self.method)}')
         logging.info(f'Client {self.client.host}:{self.client.port}. Path: {str(self.uri)}')
 
-        # Print
-        screen.addstr(clients[self.client].y_pos,0, "Client "+str(self.client.host)+':'+str(self.client.port)+'.  '+str(clients[self.client].connection_time)+' '+str(self.method)+' '+str(self.uri)+' UA: '+short_useragent)
+        # Create log message to print on the screen
+        # Format:
+        #   Connection Time Client Addr:Client Port Method URI User-Agent
+        #   2023-08-12 20:24:30.834751 CLIENT 127.0.0.1:59728 GET / (Empty)
+        log_msg=f"{str(clients[self.client].connection_time)} "
+        log_msg=log_msg+f"CLIENT {str(self.client.host)}:{str(self.client.port)} "
+        log_msg=log_msg+f"{self.method.decode()} "
+        log_msg=log_msg+f"{self.uri.decode()} "
+        log_msg=log_msg+f"({short_useragent})"
+
+        screen.addstr(clients[self.client].y_pos, 0, log_msg)
 
         #screen.addstr(13,0,str(self.uri))
         screen.refresh()

@@ -133,6 +133,36 @@ class StreamProtocol(http.HTTPChannel):
 class StreamFactory(http.HTTPFactory):
     protocol = StreamProtocol
 
+def main():
+    """
+    The main function to start The Infinite Website Honeypot.
+
+    This function starts the server and listens for incoming connections.
+    Log files are rotated every midnight, and old logs are kept indefinitely.
+
+    The port can be specified with the -p or --port command-line option. If not specified,
+    the default port is 8800.
+
+    Usage:
+        python the_infinite_website.py [--port PORT]
+
+    Raises:
+        Exception: Any unhandled exceptions that occur during execution.
+
+    Example:
+        python the_infinite_website.py --port 8000
+    """
+    try:
+        # Port is given by command parameter or defaults to 8800
+        reactor.listenTCP(port, StreamFactory())
+        logger.info(f'Listening on port {port}')
+        reactor.run()
+    except KeyboardInterrupt:
+        sys.exit(0)
+    except Exception as err:
+        print(f"Exception in main(): {err}")
+
+
 if __name__ == '__main__':
     try:
         # Create a log filename
@@ -163,11 +193,8 @@ if __name__ == '__main__':
         logger.addHandler(handler)
         logger.handlers[0].setFormatter(logging.Formatter('%(asctime)s %(message)s'))
 
-        # Port is given by command parameter or defaults to 8800
-        reactor.listenTCP(port, StreamFactory())
-        logger.info(f'Listening on port {port}')
-        reactor.run()
-    except KeyboardInterrupt:
-        sys.exit(0)
+        # Run the honeypot
+        main()
     except Exception as err:
-        print(f"Exception in __main__(): {err}")
+        logger.info(f'Exception in __main__: {err}')
+

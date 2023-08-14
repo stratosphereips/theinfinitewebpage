@@ -114,6 +114,7 @@ class StreamHandler(http.Request):
 
 
         # For GET and POST it works fine
+        logging.info(f"Processing method: {self.method.decode()}")
         if any(method in self.method.decode() for method in ['GET', 'POST', 'CONNECT', 'PUT']):
             while not http.Request.finished:
                 self.setHeader('Connection', 'Keep-Alive')
@@ -129,8 +130,10 @@ class StreamHandler(http.Request):
                 except:
                     return
         # For HEAD we should do something different because they don't wait for any data.
-        elif 'HEAD' in self.method or 'OPTIONS' in self.method:
+        elif any(method in self.method.decode() for method in ['HEAD', 'OPTIONS']):
             self.setHeader('Connection', 'Keep-Alive')
+        else:
+            logging.info(f"Method not recognised: {self.method.decode()}")
 
 
     def connection_lost(self,reason):

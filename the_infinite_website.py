@@ -154,7 +154,7 @@ if __name__ == '__main__':
 
         # Logging: create a handler that writes log messages to a file, with a new log file
         # created every midnight, and keeps 30 old log files.
-        handler = TimedRotatingFileHandler(log_filename, when="midnight", interval=1, backupCount=30)
+        handler = TimedRotatingFileHandler(log_filename, when="midnight", interval=1, backupCount=0)
         handler.suffix = "%Y-%m-%d_%H-%M-%S"  # Date and time format for old log files
 
         # Create a logger and configure it with the handler, setting the log level and format

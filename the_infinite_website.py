@@ -92,6 +92,7 @@ class StreamHandler(http.Request):
         except:
             useragent = "Empty"
             short_useragent = "Empty"
+
         logging.info(f'Client {self.client.host}:{self.client.port}. User-Agent: {useragent}')
         logging.info(f'Client {self.client.host}:{self.client.port}. Method: {str(self.method)}')
         logging.info(f'Client {self.client.host}:{self.client.port}. Path: {str(self.uri)}')

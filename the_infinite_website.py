@@ -104,6 +104,7 @@ class StreamHandler(http.Request):
             short_useragent = "Empty"
 
         log_data = {
+            'MessageType': 'Data',
             'Timestamp': str(datetime.datetime.now()),
             'SrcAddr': self.client.host,
             'Sport': self.client.port,
@@ -130,7 +131,6 @@ class StreamHandler(http.Request):
 
 
         # For GET and POST it works fine
-        logger.info(f"Processing method: {self.method.decode()}")
         if any(method in self.method.decode() for method in ['GET', 'POST', 'CONNECT', 'PUT']):
             while not http.Request.finished:
                 self.setHeader('Connection', 'Keep-Alive')
@@ -149,7 +149,7 @@ class StreamHandler(http.Request):
         elif any(method in self.method.decode() for method in ['HEAD', 'OPTIONS']):
             self.setHeader('Connection', 'Keep-Alive')
         else:
-            logger.info(f"Method not recognised: {self.method.decode()}")
+            logger.DEBUG(f"Method not recognised: {self.method.decode()}")
 
 
     def connection_lost(self,reason):
@@ -201,7 +201,13 @@ def main():
     try:
         # Port is given by command parameter or defaults to 8800
         reactor.listenTCP(port, StreamFactory())
-        logger.info(f'Listening on port {port}')
+        log_data = {
+            'MessageType': 'Server',
+            'Timestamp': str(datetime.datetime.now()),
+            'Status': 'online',
+            'Sport': port,
+        }
+        logger.info(json.dumps(log_data))
         reactor.run()
     except KeyboardInterrupt:
         sys.exit(0)

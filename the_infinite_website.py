@@ -11,13 +11,6 @@ from twisted.web import http
 from twisted.internet import protocol
 from twisted.web.server import NOT_DONE_YET
 
-# Initialise logging
-logging.basicConfig(filename='theinfinitewebsite.log',
-                    level=logging.INFO,
-                    format='%(asctime)s %(message)s')
-
-
-
 # Global Class. Oh my.
 class Cli():
     def __init__(self):
@@ -155,6 +148,10 @@ if __name__ == '__main__':
         if args.port:
             port = args.port
 
+        # Initialise logging
+        logging.basicConfig(filename='theinfinitewebsite.log',
+                            level=logging.INFO,
+                            format='%(asctime)s %(message)s')
 
         # Port is given by command parameter or defaults to 8800
         reactor.listenTCP(port, StreamFactory())

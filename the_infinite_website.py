@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 import argparse
-import datetime
 import curses
+import datetime
+import json
 import logging
 from logging.handlers import TimedRotatingFileHandler
 
@@ -94,7 +95,6 @@ class StreamHandler(http.Request):
         newcli.connection_time = datetime.datetime.now()
         clients[self.client] = newcli
         clients[self.client].y_pos = Y_POS
-        logger.info(f'New Client connected from {self.client.host}:{self.client.port}')
         Y_POS += 1
         try:
             useragent = http.Request.getAllHeaders(self)['user-agent']
@@ -103,9 +103,15 @@ class StreamHandler(http.Request):
             useragent = "Empty"
             short_useragent = "Empty"
 
-        logger.info(f'Client {self.client.host}:{self.client.port}. User-Agent: {useragent}')
-        logger.info(f'Client {self.client.host}:{self.client.port}. Method: {str(self.method)}')
-        logger.info(f'Client {self.client.host}:{self.client.port}. Path: {str(self.uri)}')
+        log_data = {
+            'Timestamp': str(datetime.datetime.now()),
+            'SrcAddr': self.client.host,
+            'Sport': self.client.port,
+            'User-Agent': useragent,
+            'Method': str(self.method),
+            'Path': str(self.uri)
+        }
+        logger.info(json.dumps(log_data))
 
         # Create log message to print on the screen
         # Format:
@@ -164,6 +170,15 @@ class StreamProtocol(http.HTTPChannel):
 class StreamFactory(http.HTTPFactory):
     protocol = StreamProtocol
 
+class JsonFormatter(logging.Formatter):
+    def format(self, record):
+        log_object = {
+            "timestamp": self.formatTime(record, self.datefmt),
+            "level": record.levelname,
+            "message": record.getMessage()
+        }
+        return json.dumps(log_object)
+
 def main():
     """
     The main function to start The Infinite Website Honeypot.
@@ -218,11 +233,13 @@ if __name__ == '__main__':
         handler = TimedRotatingFileHandler(log_filename, when="midnight", interval=1, backupCount=0)
         handler.suffix = "%Y-%m-%d_%H-%M-%S"  # Date and time format for old log files
 
+        json_formatter = JsonFormatter()
+        handler.setFormatter(json_formatter)
+
         # Create a logger and configure it with the handler, setting the log level and format
         logger = logging.getLogger()
         logger.setLevel(logging.INFO)
         logger.addHandler(handler)
-        logger.handlers[0].setFormatter(logging.Formatter('%(asctime)s %(message)s'))
 
         # Run the honeypot
         main()

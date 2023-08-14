@@ -69,6 +69,20 @@ def wait(seconds, result=None):
     return deferred_object
 
 class StreamHandler(http.Request):
+    """
+    A custom handler for processing HTTP requests related to streaming.
+
+    This class extends Twisted's http.Request and provides custom methods for handling
+    connections, processing streams, and managing client interactions.
+
+    Attributes:
+        Y_POS: A global variable for managing the Y position in the screen.
+        clients: A global variable containing a collection of connected clients.
+
+    Methods:
+        process(): An asynchronous method that processes the incoming stream.
+        connection_lost(reason): Called when a connection with a client is lost.
+    """
     global Y_POS
     global clients
 

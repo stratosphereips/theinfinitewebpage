@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+import argparse
 import datetime
 import curses
 import logging
-import argparse
+from logging.handlers import TimedRotatingFileHandler
 
 # twisted.internet  drives the whole process, accepting TCP connections and moving bytes
 from twisted.internet import reactor
@@ -62,7 +63,7 @@ class StreamHandler(http.Request):
         newcli.connection_time = datetime.datetime.now()
         clients[self.client] = newcli
         clients[self.client].y_pos = Y_POS
-        logging.info(f'New Client connected from {self.client.host}:{self.client.port}')
+        logger.info(f'New Client connected from {self.client.host}:{self.client.port}')
         Y_POS += 1
         try:
             useragent = http.Request.getAllHeaders(self)['user-agent']
@@ -71,9 +72,9 @@ class StreamHandler(http.Request):
             useragent = "Empty"
             short_useragent = "Empty"
 
-        logging.info(f'Client {self.client.host}:{self.client.port}. User-Agent: {useragent}')
-        logging.info(f'Client {self.client.host}:{self.client.port}. Method: {str(self.method)}')
-        logging.info(f'Client {self.client.host}:{self.client.port}. Path: {str(self.uri)}')
+        logger.info(f'Client {self.client.host}:{self.client.port}. User-Agent: {useragent}')
+        logger.info(f'Client {self.client.host}:{self.client.port}. Method: {str(self.method)}')
+        logger.info(f'Client {self.client.host}:{self.client.port}. Path: {str(self.uri)}')
 
         # Create log message to print on the screen
         # Format:
@@ -92,7 +93,7 @@ class StreamHandler(http.Request):
 
 
         # For GET and POST it works fine
-        logging.info(f"Processing method: {self.method.decode()}")
+        logger.info(f"Processing method: {self.method.decode()}")
         if any(method in self.method.decode() for method in ['GET', 'POST', 'CONNECT', 'PUT']):
             while not http.Request.finished:
                 self.setHeader('Connection', 'Keep-Alive')
@@ -111,16 +112,16 @@ class StreamHandler(http.Request):
         elif any(method in self.method.decode() for method in ['HEAD', 'OPTIONS']):
             self.setHeader('Connection', 'Keep-Alive')
         else:
-            logging.info(f"Method not recognised: {self.method.decode()}")
+            logger.info(f"Method not recognised: {self.method.decode()}")
 
 
     def connection_lost(self,reason):
         global clients
         disconnect_time = datetime.datetime.now()
         try:
-            logging.info('Client {}:{}. Finished connection. Total Transfer: {:.3f} MB, Duration: {}'.format(self.client.host, self.client.port, clients[self.client].amount_transfered/1024/1024.0, str(disconnect_time - clients[self.client].connection_time)))
+            logger.info('Client {}:{}. Finished connection. Total Transfer: {:.3f} MB, Duration: {}'.format(self.client.host, self.client.port, clients[self.client].amount_transfered/1024/1024.0, str(disconnect_time - clients[self.client].connection_time)))
         except AttributeError:
-            logging.error('The client variable was not available. No more info.')
+            logger.error('The client variable was not available. No more info.')
             return
         http.Request.notifyFinish(self)
         http.Request.finish(self)
@@ -134,6 +135,9 @@ class StreamFactory(http.HTTPFactory):
 
 if __name__ == '__main__':
     try:
+        # Create a log filename
+        log_filename = 'log/tiw.log'
+
         # Argument parser
         parser = argparse.ArgumentParser()
         parser.add_argument('-p',
@@ -148,14 +152,20 @@ if __name__ == '__main__':
         if args.port:
             port = args.port
 
-        # Initialise logging
-        logging.basicConfig(filename='theinfinitewebsite.log',
-                            level=logging.INFO,
-                            format='%(asctime)s %(message)s')
+        # Create a handler that writes log messages to a file, with a new log file
+        # created every midnight, and keeps 30 old log files.
+        handler = TimedRotatingFileHandler(log_filename, when="midnight", interval=1, backupCount=30)
+        handler.suffix = "%Y-%m-%d_%H-%M-%S"  # Date and time format for old log files
+
+        # Create a logger and configure it with the handler, setting the log level and format
+        logger = logging.getLogger()
+        logger.setLevel(logging.INFO)
+        logger.addHandler(handler)
+        logger.handlers[0].setFormatter(logging.Formatter('%(asctime)s %(message)s'))
 
         # Port is given by command parameter or defaults to 8800
         reactor.listenTCP(port, StreamFactory())
-        logging.info(f'Listening on port {port}')
+        logger.info(f'Listening on port {port}')
         reactor.run()
     except KeyboardInterrupt:
         sys.exit(0)

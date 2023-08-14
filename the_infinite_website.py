@@ -151,7 +151,13 @@ class StreamProtocol(http.HTTPChannel):
 class StreamFactory(http.HTTPFactory):
     protocol = StreamProtocol
 
-# Port is given by command parameter or defaults to 8800
-reactor.listenTCP(port, StreamFactory())
-logging.info(f'Listening on port {port}')
-reactor.run()
+if __name__ == '__main__':
+    try:
+        # Port is given by command parameter or defaults to 8800
+        reactor.listenTCP(port, StreamFactory())
+        logging.info(f'Listening on port {port}')
+        reactor.run()
+    except KeyboardInterrupt:
+        sys.exit(0)
+    except Exception as err:
+        print(f"Exception in __main__(): {err}")

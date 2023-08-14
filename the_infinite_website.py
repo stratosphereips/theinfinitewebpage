@@ -46,10 +46,27 @@ screen = new_screen
 
 #####################
 def wait(seconds, result=None):
-    """Returns a deferred that will be fired later"""
-    d = defer.Deferred()
-    reactor.callLater(seconds, d.callback, result)
-    return d
+    """
+    Returns a deferred that will be fired after a specified number of seconds.
+
+    This function schedules a callback to be called after a delay, using the Twisted reactor.
+    It returns a deferred object that will be fired with the given result after the specified
+    number of seconds.
+
+    Args:
+        seconds (float): The number of seconds to wait before firing the deferred.
+        result (Optional[Any]): The result value to pass to the deferred's callback. Defaults to None.
+
+    Returns:
+        defer.Deferred: The deferred object that will be fired after the specified delay.
+
+    Example:
+        deferred_object = wait(5, "Done")
+        deferred_object.addCallback(print)  # Will print "Done" after 5 seconds.
+    """
+    deferred_object = defer.Deferred()
+    reactor.callLater(seconds, deferred_object.callback, result)
+    return deferred_object
 
 class StreamHandler(http.Request):
     global Y_POS

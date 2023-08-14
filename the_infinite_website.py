@@ -17,21 +17,6 @@ logging.basicConfig(filename='theinfinitewebsite.log',
                     format='%(asctime)s %(message)s')
 
 
-# Argument parser
-parser = argparse.ArgumentParser()
-parser.add_argument('-p',
-                    '--port',
-                    help='Port where the webserver should listen.',
-                    action='store',
-                    required=False,
-                    type=int,
-                    default=8800)
-args = parser.parse_args()
-
-if args.port:
-    port = args.port
-
-
 
 # Global Class. Oh my.
 class Cli():
@@ -156,6 +141,21 @@ class StreamFactory(http.HTTPFactory):
 
 if __name__ == '__main__':
     try:
+        # Argument parser
+        parser = argparse.ArgumentParser()
+        parser.add_argument('-p',
+                            '--port',
+                            help='Port where the webserver should listen.',
+                            action='store',
+                            required=False,
+                            type=int,
+                            default=8800)
+        args = parser.parse_args()
+
+        if args.port:
+            port = args.port
+
+
         # Port is given by command parameter or defaults to 8800
         reactor.listenTCP(port, StreamFactory())
         logging.info(f'Listening on port {port}')

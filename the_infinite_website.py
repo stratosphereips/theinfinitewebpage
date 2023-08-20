@@ -109,16 +109,13 @@ class StreamHandler(http.Request):
             useragent = "Empty"
             short_useragent = "Empty"
 
-        logger.info(
-            json.dumps(
-                log_message_http(
-                    str(clients[self.client].connection_time),
-                    self.client,
-                    self.method,
-                    self.uri,
-                    useragent
-                )
-            )
+        log_message_http(
+            logger,
+            str(clients[self.client].connection_time),
+            self.client,
+            self.method,
+            self.uri,
+            useragent
         )
 
         # Create log message to print on the screen
@@ -255,6 +252,8 @@ if __name__ == '__main__':
 
         # Run the honeypot
         main()
+    except KeyboardInterrupt:
+        sys.exit(0)
     except Exception as err:
         logger.info(f'Exception in __main__: {err}')
 

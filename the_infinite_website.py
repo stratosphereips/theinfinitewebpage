@@ -149,7 +149,8 @@ class StreamHandler(http.Request):
         elif any(method in self.method.decode() for method in ['HEAD', 'OPTIONS']):
             self.setHeader('Connection', 'Keep-Alive')
         else:
-            logger.DEBUG(f"Method not recognised: {self.method.decode()}")
+            # Method not recognised
+            pass
 
 
     def connection_lost(self,reason):

@@ -103,7 +103,7 @@ class StreamHandler(http.Request):
         clients[self.client].y_pos = Y_POS
         Y_POS += 1
         try:
-            useragent = http.Request.getAllHeaders(self)['user-agent']
+            useragent = self.requestHeaders.getRawHeaders('User-Agent', [None])[0]
             short_useragent = useragent[0:50]
         except:
             useragent = "Empty"

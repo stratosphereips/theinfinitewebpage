@@ -158,7 +158,7 @@ class StreamHandler(http.Request):
         try:
             logger.info('Client {}:{}. Finished connection. Total Transfer: {:.3f} MB, Duration: {}'.format(self.client.host, self.client.port, clients[self.client].amount_transfered/1024/1024.0, str(disconnect_time - clients[self.client].connection_time)))
         except AttributeError:
-            logger.error('The client variable was not available. No more info.')
+            logger.info('The client variable was not available. No more info.')
             return
         http.Request.notifyFinish(self)
         http.Request.finish(self)

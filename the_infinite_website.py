@@ -175,6 +175,14 @@ class StreamFactory(http.HTTPFactory):
     protocol = StreamProtocol
 
 class JsonFormatter(logging.Formatter):
+    """
+    A custom formatter for logging that formats log records as JSON objects.
+
+    The resulting JSON object includes the following fields:
+        - "timestamp": The timestamp of the log record, formatted according to the datefmt attribute.
+        - "level": The log level of the record (e.g., "INFO", "WARNING").
+        - "message": The log message.
+    """
     def format(self, record):
         log_object = {
             "timestamp": self.formatTime(record, self.datefmt),

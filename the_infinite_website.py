@@ -15,6 +15,9 @@ from twisted.web.server import NOT_DONE_YET
 
 # Our own imports
 from lib.custom_logging import log_message_http
+from lib.custom_http import generate_html
+
+
 # Global Class. Oh my.
 class Cli():
     def __init__(self):
@@ -138,14 +141,13 @@ class StreamHandler(http.Request):
         if any(method in self.method.decode() for method in ['GET', 'POST', 'CONNECT', 'PUT']):
             while not http.Request.finished:
                 self.setHeader('Connection', 'Keep-Alive')
-                s = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>This is a TL;DR page.</title></head><body>"
-                s += str("What you are looking for is in the next line<br>"*100)
-                newcli.amount_transfered += len(s)
+                html_content = generate_html()
+                newcli.amount_transfered += len(html_content)
                 # For some reason the connection is not stopped and continues to try to send data
                 screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amount_transfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connection_time), curses.color_pair(2))
                 screen.refresh()
                 try:
-                    self.write(s)
+                    self.write(html_content)
                     yield wait(0)
                 except:
                     return

@@ -13,6 +13,8 @@ from twisted.web import http
 from twisted.internet import protocol
 from twisted.web.server import NOT_DONE_YET
 
+# Our own imports
+from lib.custom_logging import log_message_http
 # Global Class. Oh my.
 class Cli():
     def __init__(self):
@@ -69,6 +71,7 @@ def wait(seconds, result=None):
     reactor.callLater(seconds, deferred_object.callback, result)
     return deferred_object
 
+
 class StreamHandler(http.Request):
     """
     A custom handler for processing HTTP requests related to streaming.
@@ -103,16 +106,17 @@ class StreamHandler(http.Request):
             useragent = "Empty"
             short_useragent = "Empty"
 
-        log_data = {
-            'MessageType': 'Data',
-            'Timestamp': str(datetime.datetime.now()),
-            'SrcAddr': self.client.host,
-            'Sport': self.client.port,
-            'User-Agent': useragent,
-            'Method': str(self.method),
-            'Path': str(self.uri)
-        }
-        logger.info(json.dumps(log_data))
+        logger.info(
+            json.dumps(
+                log_message_http(
+                    str(clients[self.client].connection_time),
+                    self.client,
+                    self.method,
+                    self.uri,
+                    useragent
+                )
+            )
+        )
 
         # Create log message to print on the screen
         # Format:

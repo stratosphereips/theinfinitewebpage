@@ -219,7 +219,7 @@ def main():
 if __name__ == '__main__':
     try:
         # Create a log filename
-        log_filename = 'log/tiw.log'
+        log_filename = f'log/{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}_tiw.log'
 
         # Argument parser
         parser = argparse.ArgumentParser()
@@ -238,7 +238,6 @@ if __name__ == '__main__':
         # Logging: create a handler that writes log messages to a file, with a new log file
         # created every midnight, and keeps 30 old log files.
         handler = TimedRotatingFileHandler(log_filename, when="midnight", interval=1, backupCount=0)
-        handler.suffix = "%Y-%m-%d_%H-%M-%S"  # Date and time format for old log files
 
         json_formatter = JsonFormatter()
         handler.setFormatter(json_formatter)

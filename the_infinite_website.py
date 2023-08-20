@@ -222,7 +222,7 @@ def main():
 if __name__ == '__main__':
     try:
         # Create a log filename
-        log_filename = f'log/{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}_tiw.log'
+        log_filename = f'log/{datetime.datetime.now().strftime("%Y-%m-%d")}_tiw.log'
 
         # Argument parser
         parser = argparse.ArgumentParser()

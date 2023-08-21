@@ -170,11 +170,19 @@ class StreamHandler(http.Request):
                 time.sleep(0.1)
         # For HEAD we should do something different because they don't wait for any data.
         elif any(method in self.method.decode() for method in ['HEAD', 'OPTIONS']):
-            self.setHeader('Connection', 'Keep-Alive')
-        else:
-            # Method not recognised
-            pass
+            while self.connection_alive:
+                self.setHeader('Connection', 'Keep-Alive')
+                self.setHeader('Content-Type', 'text/html')
 
+                # Prepare to display data
+                data_display = f"Data {newcli.amount_transfered/1024/1024.0:>5.3f} MB, Duration {datetime.datetime.now() - newcli.connection_time}"
+                screen.addstr(clients[self.client].y_pos, DATA_DISPLAY_POSITION, data_display, curses.color_pair(2))
+                screen.refresh()
+                try:
+                    yield wait(0.1)
+                except:
+                    return
+                time.sleep(0.1)
 
     def connection_lost(self,reason):
         global clients

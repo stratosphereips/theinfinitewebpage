@@ -93,6 +93,14 @@ class StreamHandler(http.Request):
     global Y_POS
     global clients
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.connection_alive = True
+
+    def connectionLost(self, reason):
+        self.connection_alive = False
+        super().connectionLost(reason)
+
     @defer.inlineCallbacks
     def process(self):
         global Y_POS

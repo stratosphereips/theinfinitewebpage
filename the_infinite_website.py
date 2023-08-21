@@ -184,7 +184,19 @@ class StreamHandler(http.Request):
                     return
                 time.sleep(0.1)
 
+        else:
+            while self.connection_alive:
+                self.setHeader('Connection', 'Keep-Alive')
 
+                # Prepare to display data
+                data_display = f"Data {newcli.amount_transfered/1024/1024.0:>5.3f} MB, Duration {datetime.datetime.now() - newcli.connection_time}"
+                screen.addstr(clients[self.client].y_pos, DATA_DISPLAY_POSITION, data_display, curses.color_pair(2))
+                screen.refresh()
+                try:
+                    yield wait(0.1)
+                except:
+                    return
+                time.sleep(0.1)
 
 class StreamProtocol(http.HTTPChannel):
     requestFactory = StreamHandler

@@ -184,16 +184,6 @@ class StreamHandler(http.Request):
                     return
                 time.sleep(0.1)
 
-    def connection_lost(self,reason):
-        global clients
-        disconnect_time = datetime.datetime.now()
-        try:
-            logger.info('Client {}:{}. Finished connection. Total Transfer: {:.3f} MB, Duration: {}'.format(self.client.host, self.client.port, clients[self.client].amount_transfered/1024/1024.0, str(disconnect_time - clients[self.client].connection_time)))
-        except AttributeError:
-            logger.info('The client variable was not available. No more info.')
-            return
-        http.Request.notifyFinish(self)
-        http.Request.finish(self)
 
 
 class StreamProtocol(http.HTTPChannel):

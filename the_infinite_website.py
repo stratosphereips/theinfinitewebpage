@@ -150,6 +150,7 @@ class StreamHandler(http.Request):
 
         # For GET and POST it works fine
         if any(method in self.method.decode() for method in ALLOWED_METHODS):
+            while self.connection_alive:
                 self.setHeader('Connection', 'Keep-Alive')
                 self.setHeader('Content-Type', 'text/html')
                 html_content = generate_html()

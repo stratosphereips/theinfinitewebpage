@@ -103,6 +103,11 @@ class StreamHandler(http.Request):
         clients[self.client].y_pos = Y_POS
         Y_POS += 1
         DATA_DISPLAY_POSITION = 140
+        ALLOWED_METHODS = ['GET', 'POST', 'CONNECT', 'PUT', 'REPORT', 'PROPFIND', 'TRACE',
+                           'COPY', 'ACL', 'PROPPATCH', 'MKCOL', 'VERSION-CONTROL', 'MOVE',
+                           'UNLOCK', 'PATCH', 'MERGE', 'LINK', 'PATCH', 'UNLINK',
+                           ]
+
         try:
             useragent = self.requestHeaders.getRawHeaders('User-Agent', [None])[0]
             short_useragent = useragent[0:50]
@@ -138,6 +143,7 @@ class StreamHandler(http.Request):
         # For GET and POST it works fine
         if any(method in self.method.decode() for method in ['GET', 'POST', 'CONNECT', 'PUT']):
             while not http.Request.finished:
+        if any(method in self.method.decode() for method in ALLOWED_METHODS):
                 self.setHeader('Connection', 'Keep-Alive')
                 html_content = generate_html()
                 newcli.amount_transfered += len(html_content)

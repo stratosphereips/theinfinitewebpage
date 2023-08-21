@@ -102,6 +102,7 @@ class StreamHandler(http.Request):
         clients[self.client] = newcli
         clients[self.client].y_pos = Y_POS
         Y_POS += 1
+        DATA_DISPLAY_POSITION = 140
         try:
             useragent = self.requestHeaders.getRawHeaders('User-Agent', [None])[0]
             short_useragent = useragent[0:50]

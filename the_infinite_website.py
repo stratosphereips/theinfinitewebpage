@@ -166,6 +166,7 @@ class StreamHandler(http.Request):
                     yield wait(0.1)
                 except:
                     return
+                time.sleep(0.1)
         # For HEAD we should do something different because they don't wait for any data.
         elif any(method in self.method.decode() for method in ['HEAD', 'OPTIONS']):
             self.setHeader('Connection', 'Keep-Alive')

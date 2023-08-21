@@ -149,8 +149,6 @@ class StreamHandler(http.Request):
 
 
         # For GET and POST it works fine
-        if any(method in self.method.decode() for method in ['GET', 'POST', 'CONNECT', 'PUT']):
-            while not http.Request.finished:
         if any(method in self.method.decode() for method in ALLOWED_METHODS):
                 self.setHeader('Connection', 'Keep-Alive')
                 html_content = generate_html()

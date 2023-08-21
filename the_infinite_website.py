@@ -2,6 +2,7 @@
 import argparse
 import curses
 import datetime
+import time
 import json
 import logging
 from logging.handlers import TimedRotatingFileHandler

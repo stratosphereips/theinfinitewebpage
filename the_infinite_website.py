@@ -155,9 +155,12 @@ class StreamHandler(http.Request):
                 self.setHeader('Content-Type', 'text/html')
                 html_content = generate_html()
                 newcli.amount_transfered += len(html_content)
-                # For some reason the connection is not stopped and continues to try to send data
-                screen.addstr(clients[self.client].y_pos,140, " Data {:>5.3f} MB".format(clients[self.client].amount_transfered/1024/1024.0)+" Duration "+str(datetime.datetime.now() - clients[self.client].connection_time), curses.color_pair(2))
+
+                # Prepare to display data
+                data_display = f"Data {newcli.amount_transfered/1024/1024.0:>5.3f} MB, Duration {datetime.datetime.now() - newcli.connection_time}"
+                screen.addstr(clients[self.client].y_pos, DATA_DISPLAY_POSITION, data_display, curses.color_pair(2))
                 screen.refresh()
+
                 try:
                     self.write(html_content)
                     yield wait(0)

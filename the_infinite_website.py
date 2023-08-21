@@ -162,8 +162,8 @@ class StreamHandler(http.Request):
                 screen.refresh()
 
                 try:
-                    self.write(html_content)
-                    yield wait(0)
+                    self.write(html_content.encode('utf-8'))
+                    yield wait(0.1)
                 except:
                     return
         # For HEAD we should do something different because they don't wait for any data.
